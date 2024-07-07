@@ -3,11 +3,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
-    container_name: gvgroup_order_management
+    container_name: gvgroup_order_management_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: gvgroup_order_management
+      POSTGRES_DB: gvgroup_order_management_db
     ports:
       - "5433:5432"
     volumes:
@@ -70,9 +70,9 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: 12345
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://user-management-app:8081
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: order_management_kafka:29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     networks:
-        - gvgroup_network
+      - gvgroup_network
 
 volumes:
   postgres_data:

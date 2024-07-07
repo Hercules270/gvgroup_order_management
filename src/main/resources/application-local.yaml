@@ -1,4 +1,4 @@
-Copyspring:
+spring:
   security:
     oauth2:
       resourceserver:
@@ -6,11 +6,12 @@ Copyspring:
           issuer-uri: http://user-management-app:8081
 
   datasource:
-    url: jdbc:postgresql://gvgroup_order_management:5432/gvgroup_order_management
+    url: jdbc:postgresql://postgres:5433/gvgroup_order_management
     username: user
     password: 12345
     driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialec
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -34,7 +35,7 @@ Copyspring:
           json:
             trusted:
               packages: '*'
-    bootstrap-servers: order_management_kafka:29092
+    bootstrap-servers: kafka:29092
 
 
 server:
