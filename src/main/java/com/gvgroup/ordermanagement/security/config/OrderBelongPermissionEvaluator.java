@@ -20,7 +20,7 @@ import static com.gvgroup.ordermanagement.security.config.SecurityConstants.USER
 @RequiredArgsConstructor
 public class OrderBelongPermissionEvaluator implements PermissionEvaluator {
 
-    private final OrderQueryService orderQUeryService;
+    private final OrderQueryService orderQueryService;
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
@@ -34,7 +34,7 @@ public class OrderBelongPermissionEvaluator implements PermissionEvaluator {
 
     public boolean hasCustomPermission(Authentication authentication, String orderId) {
         Jwt jwt = (Jwt) authentication.getPrincipal();
-        orderQUeryService.findOrderByOrderIdAndUserIdNullable(OrderId.from(orderId), UserId.from(jwt.getClaimAsString(USER_ID_CLAIM_NAME)))
+        orderQueryService.findOrderByOrderIdAndUserIdNullable(OrderId.from(orderId), UserId.from(jwt.getClaimAsString(USER_ID_CLAIM_NAME)))
                 .orElseThrow(() -> new OrderAccessDeniedException("Order with order id " + orderId.toString() + " does not exist",
                         "Order with order id " + orderId + " does not exist",
                         ErrorCode.ORDER_WITH_ORDER_ID_NOT_FOUND));
