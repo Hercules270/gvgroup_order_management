@@ -3,11 +3,14 @@ package com.gvgroup.ordermanagement.facade;
 
 import com.gvgroup.ordermanagement.config.HazelcastConfig;
 import com.gvgroup.ordermanagement.entity.Order;
+import com.gvgroup.ordermanagement.model.message.OrderCreatedMessage;
+import com.gvgroup.ordermanagement.model.message.OrderDeletedMessage;
 import com.gvgroup.ordermanagement.model.request.CreateOrderRequest;
 import com.gvgroup.ordermanagement.model.request.UpdateOrderRequest;
 import com.gvgroup.ordermanagement.model.response.OrderDetailsResponse;
 import com.gvgroup.ordermanagement.model.response.PageableOrderDetailsResponse;
 import com.gvgroup.ordermanagement.security.service.OrderQueryService;
+import com.gvgroup.ordermanagement.service.MessagePublisherService;
 import com.gvgroup.ordermanagement.service.OrderService;
 import com.gvgroup.ordermanagement.value.OrderId;
 import com.gvgroup.ordermanagement.value.UserId;
@@ -19,17 +22,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.gvgroup.ordermanagement.utils.KafkaConstants.ORDER_CREATED_TOPIC_NAME;
+import static com.gvgroup.ordermanagement.utils.KafkaConstants.ORDER_DELETED_TOPIC_NAME;
+
 @Component
 public class OrderFacade {
 
     private final OrderService orderService;
     private final OrderQueryService orderQueryService;
     private final IMap<OrderId, Order> orderCache;
+    private final MessagePublisherService messagePublisherService;
 
-    public OrderFacade(OrderService orderService, OrderQueryService orderQueryService, HazelcastInstance hazelcastInstance) {
+    public OrderFacade(OrderService orderService, OrderQueryService orderQueryService, HazelcastInstance hazelcastInstance, MessagePublisherService messagePublisherService) {
         this.orderService = orderService;
         this.orderQueryService = orderQueryService;
         this.orderCache = hazelcastInstance.getMap(HazelcastConfig.ORDERS);
+        this.messagePublisherService = messagePublisherService;
     }
 
     public ResponseEntity<OrderDetailsResponse> createOrder(UserId userId, CreateOrderRequest orderRequest) {
@@ -40,6 +48,7 @@ public class OrderFacade {
                 orderRequest.getQuantity(),
                 orderRequest.getPrice());
         orderCache.put(orderId, order);
+        messagePublisherService.publish(ORDER_CREATED_TOPIC_NAME, OrderCreatedMessage.convert(order));
         return new ResponseEntity<>(OrderDetailsResponse.toJson(order), HttpStatus.CREATED);
     }
 
@@ -64,6 +73,7 @@ public class OrderFacade {
     public ResponseEntity<Void> deleteOrder(OrderId orderId) {
         orderService.deleteOrder(orderId);
         orderCache.remove(orderId);
+        messagePublisherService.publish(ORDER_DELETED_TOPIC_NAME, OrderDeletedMessage.convert(orderId));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
