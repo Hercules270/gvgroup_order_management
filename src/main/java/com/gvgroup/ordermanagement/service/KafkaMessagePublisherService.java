@@ -15,7 +15,7 @@ public class KafkaMessagePublisherService implements MessagePublisherService {
 
     @Override
     public void publish(String destination, Object message) {
-    log.info("PUBLISHING {}", message);
-//        kafkaTemplate.send(destination, message);
+//    log.info("PUBLISHING {}", message);
+        kafkaTemplate.send(destination, message);
     }
 }
