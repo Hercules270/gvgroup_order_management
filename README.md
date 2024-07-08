@@ -24,11 +24,3 @@ The **Order Management** application manages orders within a system, leveraging 
 ### Building the Docker Image
 
 To create the Docker image, use the provided `Dockerfile`.
-
-### Running the Application
-
-1. Navigate to the directory containing the `docker-compose.yaml` file.
-2. Run the following command to start the container:
-
-   ```sh
-   docker-compose up -d
