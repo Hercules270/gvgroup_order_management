@@ -11,7 +11,7 @@ import static com.gvgroup.ordermanagement.utils.KafkaConstants.ORDER_CREATED_TOP
 import static com.gvgroup.ordermanagement.utils.KafkaConstants.ORDER_DELETED_TOPIC_NAME;
 
 @Slf4j
-@Component
+//@Component
 public class KafkaQueueListener {
 
     @KafkaListener(topics = ORDER_CREATED_TOPIC_NAME)

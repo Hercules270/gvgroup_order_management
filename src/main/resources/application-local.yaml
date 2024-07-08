@@ -6,10 +6,11 @@ spring:
           issuer-uri: http://user-management-app:8081
 
   datasource:
-    url: jdbc:postgresql://postgres:5433/gvgroup_order_management
-    username: user
-    password: 12345
+    url: SPRING_DATASOURCE_URL
+    username: SPRING_DATASOURCE_USERNAME
+    password: SPRING_DATASOURCE_PASSWORD
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialec
     hibernate:
@@ -35,8 +36,7 @@ spring:
           json:
             trusted:
               packages: '*'
-    bootstrap-servers: kafka:29092
-
+    bootstrap-servers: SPRING_KAFKA_BOOTSTRAP_SERVERS
 
 server:
   servlet:

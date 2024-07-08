@@ -7,7 +7,3 @@ spring:
     name: order-management
   profiles:
     active: local
-
-logging:
-  level:
-    root: debug

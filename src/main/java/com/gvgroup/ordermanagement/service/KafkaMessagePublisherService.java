@@ -1,10 +1,12 @@
 package com.gvgroup.ordermanagement.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KafkaMessagePublisherService implements MessagePublisherService {
@@ -13,6 +15,7 @@ public class KafkaMessagePublisherService implements MessagePublisherService {
 
     @Override
     public void publish(String destination, Object message) {
-        kafkaTemplate.send(destination, message);
+    log.info("PUBLISHING {}", message);
+//        kafkaTemplate.send(destination, message);
     }
 }
